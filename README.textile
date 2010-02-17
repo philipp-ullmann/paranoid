@@ -1,0 +1,99 @@
+h1. paranoid
+
+h3. advice and disclaimer
+
+You should never expect _any_ library to work or behave exactly how you want it to:  test, test, test and file an issue if you have any problems. Bonus points if you include sample failing code.  Extra bonus points if you send a pull request that implements a feature/fixes a bug.
+
+h3. How did I get here?
+
+Sometimes you want to delete something in ActiveRecord, but you realize you might need it later (for an undo feature, or just as a safety net, etc.). There are a plethora of plugins that accomplish this, the most famous of which was the venerable acts_as_paranoid which is great but not really actively developed any more. What's more, acts_as_paranoid was written for an older version of ActiveRecord. Is_paranoid was written for ActiveRecord 2.3 and default_scope. This however became, as the author stated, a mess of hacks to catch all the edge cases. *Paranoid* is an attempt to utilize ActiveRecord::Relation and JoinDependency in ActiveRecord 3 to do all the heavy lifting without using default_scope and with_exclusive_scope.
+
+h3. How does it work?
+
+You should read the specs, or the RDOC, or even the source itself (which is very readable), but for the lazy, here's the hand-holding:
+
+You need ActiveRecord 3 and you need to properly install this gem.  Then you need a model with a field to serve as a flag column on its database table. For this example we'll use a timestamp named "deleted_at".  If that column is null, the item isn't deleted.  If it has a timestamp, it should count as deleted.
+
+So let's assume we have a model Automobile that has a deleted_at column on the automobiles table.
+
+If you're working with Rails, in your Gemfile, add the following (you may want to change the version number).
+
+<pre>
+gem "paranoid", :require => 'paranoid', :version => ">= 0.1.0"
+</pre>
+
+Then in your ActiveRecord model
+
+<pre>
+class Automobile < ActiveRecord::Base
+  paranoid
+end
+</pre>
+
+Now our automobiles are soft-deleteable.
+
+<pre>
+that_large_automobile = Automobile.create()
+Automobile.count # => 1
+
+that_large_automobile.destroy
+Automobile.count # => 0
+Automobile.count_with_destroyed # => 1
+
+# where is that large automobile?
+that_large_automobile = Automobile.find_with_destroyed(:all).first
+that_large_automobile.restore
+Automobile.count # => 1
+</pre>
+
+One thing to note, destroying is always undo-able, but deleting is not.  This is a behavior difference between acts_as_paranoid and paranoid and the same as is_paranoid.
+
+<pre>
+Automobile.destroy_all
+Automobile.count # => 0
+Automobile.count_with_destroyed # => 1
+
+Automobile.delete_all
+Automobile.count_with_destroyed # => 0
+# And you may say to yourself, "My god!  What have I done?"
+</pre>
+
+Any find/count/sum/etc. _with_destroyed calls should work and you can also do find/count/sum/etc._destroyed_only.
+
+h3. Specifying alternate rules for what should be considered destroyed
+
+"deleted_at" as a timestamp is what acts_as_paranoid uses to define what is and isn't destroyed (see above), but you can specify alternate options with paranoid.  In the paranoid line of your model you can specify the field, the value the field should have if the entry should count as destroyed, and the value the field should have if the entry is not destroyed.  Consider the following models:
+
+<pre>
+class Pirate < ActiveRecord::Base
+  paranoid :field => [:alive, false, true]
+end
+
+class DeadPirate < ActiveRecord::Base
+  set_table_name :pirates
+  paranoid :field => [:alive, true, false]
+end
+</pre>
+
+These two models share the same table, but when we are finding Pirates, we're only interested in those that are alive.  To break it down, we specify :alive as our field to check, false as what the model field should be marked at when destroyed and true to what the field should be if they're not destroyed.  DeadPirates are specified as the opposite.  Check out the specs if you're still confused.
+
+h3. Note about validates_uniqueness_of:
+
+validates_uniqueness_of does not, by default, ignore items marked with a deleted_at (or other field name) flag.  This is a behavior difference between paranoid and acts_as_paranoid and the same as is_paranoid.  You can overcome this by specifying the field name you are using to mark destroyed items as your scope.  Example:
+
+<pre>
+class Android < ActiveRecord::Base
+  validates_uniqueness_of :name, :scope => :deleted_at
+  paranoid
+end
+</pre>
+
+And now the validates_uniqueness_of will ignore items that are destroyed.
+
+h3. and you may ask yourself, where does that highway go to?
+
+If you find any bugs, have any ideas of features you think are missing, or find things you're like to see work differently, feel free to file an issue or send a pull request.
+
+h3. Thanks
+
+Thanks to Rick Olson for acts_as_paranoid and to Jeffrey Chupp for is_paranoid.
