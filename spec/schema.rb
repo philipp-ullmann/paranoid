@@ -1,4 +1,4 @@
-ActiveRecord::Schema.define(:version => 20090317164830) do
+ActiveRecord::Schema.define do
   create_table "androids", :force => true do |t|
     t.string   "name"
     t.integer  "owner_id"

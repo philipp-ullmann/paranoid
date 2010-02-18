@@ -107,7 +107,8 @@ end
 class RandomPirate < ActiveRecord::Base #:nodoc:
   set_table_name :pirates
 
-  def after_destroy
+  after_destroy :raise_an_error
+  def raise_an_error
     raise 'after_destroy works'
   end
 end
@@ -116,7 +117,8 @@ class UndestroyablePirate < ActiveRecord::Base #:nodoc:
   set_table_name :pirates
   paranoid :field => [:alive, false, true]
 
-  def before_destroy
+  before_destroy :ret_false
+  def ret_false
     false
   end
 end
@@ -124,7 +126,8 @@ end
 class Uuid < ActiveRecord::Base #:nodoc:
   set_primary_key "uuid"
 
-  def before_create
+  before_create :set_uuid
+  def set_uuid
     self.uuid = "295b3430-85b8-012c-cfe4-002332cf7d5e"
   end
 

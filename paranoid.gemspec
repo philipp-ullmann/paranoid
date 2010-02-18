@@ -5,15 +5,32 @@
 
 Gem::Specification.new do |s|
   s.name = %q{paranoid}
-  s.version = "0.1.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Genord II"]
-  s.date = %q{2010-02-17}
+  s.date = %q{2010-02-18}
   s.description = %q{}
   s.email = %q{github@xspond.com}
   s.extra_rdoc_files = [
     "README.textile"
+  ]
+  s.files = [
+    "MIT-LICENSE",
+     "README.textile",
+     "Rakefile",
+     "VERSION.yml",
+     "init.rb",
+     "lib/paranoid.rb",
+     "lib/paranoid/base.rb",
+     "lib/paranoid/relation.rb",
+     "paranoid.gemspec",
+     "spec/database.yml",
+     "spec/models.rb",
+     "spec/paranoid_spec.rb",
+     "spec/schema.rb",
+     "spec/spec.opts",
+     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/xspond/paranoid/}
   s.rdoc_options = ["--charset=UTF-8"]

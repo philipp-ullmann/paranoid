@@ -1,6 +1,8 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
-require "#{File.dirname(__FILE__)}/../lib/paranoid"
 require 'active_record'
+require 'paranoid'
 require 'yaml'
 require 'spec'
 
@@ -11,4 +13,12 @@ end
 
 # Open ActiveRecord connection
 connect('test')
-load(File.dirname(__FILE__) + "/schema.rb")
+
+original_stdout = $stdout
+$stdout = StringIO.new
+
+begin
+  load(File.dirname(__FILE__) + "/schema.rb")
+ensure
+  $stdout = original_stdout
+end
