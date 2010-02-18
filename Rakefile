@@ -15,7 +15,9 @@ begin
     s.homepage = %q{http://github.com/xspond/paranoid/}
     s.description = ""
     s.authors = ["David Genord II"]
+    s.add_dependency('activerecord', '~> 3.0.0.beta')
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install jeweler"
 end
