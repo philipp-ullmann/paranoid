@@ -5,6 +5,8 @@ module Paranoid
     included do
       alias_method_chain :arel, :paranoid
       alias_method_chain :delete_all, :paranoid
+      alias_method_chain :except, :paranoid
+      alias_method_chain :only, :paranoid
     end
 
     def add_paranoid_condition?
@@ -26,6 +28,18 @@ module Paranoid
       else
         delete_all_without_paranoid(*args)
       end
+    end
+
+    def except_with_paranoid(*args)
+      result = except_without_paranoid(*args)
+      result.instance_variable_set(:@add_paranoid, @add_paranoid) if defined?(@add_paranoid)
+      result
+    end
+
+    def only_with_paranoid(*args)
+      result = only_without_paranoid(*args)
+      result.instance_variable_set(:@add_paranoid, @add_paranoid) if defined?(@add_paranoid)
+      result
     end
 
     def skip_paranoid_condition

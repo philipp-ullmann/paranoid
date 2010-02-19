@@ -26,7 +26,7 @@ describe Paranoid do
   describe 'basic functionality' do
     before(:each) do
       Place.delete_all
-      @tatooine, @mos_eisley = Place.create([{:name => "Tatooine"}, {:name => 'Mos Eisley'}])
+      @tatooine, @mos_eisley, @coruscant = Place.create([{:name => "Tatooine"}, {:name => 'Mos Eisley'}, {:name => 'Coruscant'}])
     end
 
     it 'should recognize a class as paranoid' do
@@ -77,16 +77,25 @@ describe Paranoid do
       destroyed.size.should == 1
       destroyed[0].should == @tatooine
     end
+
+    it 'should properly count records' do
+      Place.count.should == 3
+
+      @tatooine.destroy
+      Place.count.should == 2
+      Place.with_destroyed.count.should == 3
+      Place.with_destroyed_only.count.should == 1
+    end
   end
 
   describe 'for alternate field information' do
     before(:each) do
       Ninja.delete_all
-      @steve, @bob = Ninja.create([{:name => 'Steve', :visible => true}, {:name => 'Bob', :visible => true}])
+      @steve, @bob, @tim = Ninja.create([{:name => 'Steve', :visible => true}, {:name => 'Bob', :visible => true}, {:name => 'Tim', :visible => true}])
     end
 
-    it 'should have 2 visible ninjas' do
-      Ninja.all.size.should == 2
+    it 'should have 3 visible ninjas' do
+      Ninja.all.size.should == 3
     end
 
     it 'should vanish the ninja' do
@@ -119,6 +128,15 @@ describe Paranoid do
       destroyed = Ninja.with_destroyed_only.all
       destroyed.size.should == 1
       destroyed[0].should == @steve
+    end
+
+    it 'should properly count records' do
+      Ninja.count.should == 3
+
+      @steve.destroy
+      Ninja.count.should == 2
+      Ninja.with_destroyed.count.should == 3
+      Ninja.with_destroyed_only.count.should == 1
     end
   end
 end
