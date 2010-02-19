@@ -38,10 +38,10 @@ Automobile.count # => 1
 
 that_large_automobile.destroy
 Automobile.count # => 0
-Automobile.count_with_destroyed # => 1
+Automobile.with_destroyed.count # => 1
 
 # where is that large automobile?
-that_large_automobile = Automobile.find_with_destroyed(:all).first
+that_large_automobile = Automobile.with_destroyed.first
 that_large_automobile.restore
 Automobile.count # => 1
 </pre>
@@ -51,14 +51,24 @@ One thing to note, destroying is always undo-able, but deleting is not.  This is
 <pre>
 Automobile.destroy_all
 Automobile.count # => 0
-Automobile.count_with_destroyed # => 1
+Automobile.with_destroyed.count # => 1
 
 Automobile.delete_all
-Automobile.count_with_destroyed # => 0
+Automobile.with_destroyed.count # => 0
 # And you may say to yourself, "My god!  What have I done?"
 </pre>
 
-Any find/count/sum/etc. _with_destroyed calls should work and you can also do find/count/sum/etc._destroyed_only.
+You can also lookup only destroyed record with with_destroyed_only.
+
+<pre>
+auto1 = Automobile.create()
+auto2 = Automobile.create()
+auto2.destroy
+Automobile.count # => 1
+Automobile.with_destroyed.count # => 2
+Automobile.with_destroyed_only.count # => 1
+Automobile.with_destroyed_only.first # => auto2
+</pre>
 
 h3. Specifying alternate rules for what should be considered destroyed
 
