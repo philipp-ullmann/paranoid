@@ -1,5 +1,23 @@
 module Paranoid
   module Base
+    # Call this in your model to enable paranoid.
+    #
+    # === Examples
+    #
+    #   Post < ActiveRecord::Base
+    #     paranoid
+    #   end
+    #
+    #   Item < ActiveRecord::Base
+    #     paranoid :field => [:available, fales, true]
+    #   end
+    #
+    # === Options
+    #
+    # [:field]
+    #   Must be a 3 element array in the form
+    #   [:field_name, 'destroyed value', 'not destroyed value']
+    #   Default: [:deleted_at, Proc.new{Time.now.utc}, nil]
     def paranoid(opts = {})
       return if paranoid?
       @paranoid = true
@@ -17,6 +35,7 @@ module Paranoid
       end
     end
 
+    # Returns true if the model is paranoid and paranoid is enabled
     def paranoid?
       @paranoid = false unless defined?(@paranoid)
       @paranoid

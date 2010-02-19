@@ -1,3 +1,4 @@
+require 'rake/rdoctask'
 require "spec"
 require "spec/rake/spectask"
 
@@ -21,5 +22,15 @@ begin
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install jeweler"
 end
+
+Rake::RDocTask.new { |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title    = "Paranoid"
+  rdoc.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
+  rdoc.options << '--charset' << 'utf-8'
+  rdoc.template = ENV['template'] ? "#{ENV['template']}.rb" : './rdoc/template.rb'
+  rdoc.rdoc_files.include('README.textile')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+}
 
 task :default  => :spec

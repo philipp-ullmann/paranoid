@@ -8,10 +8,14 @@ module Paranoid
     end
 
     module ClassMethods
+      # Returns the condition used to scope the return to exclude
+      # soft deleted records
       def paranoid_condition
         {destroyed_field => field_not_destroyed}
       end
 
+      # Returns the condition used to scope the return to contain
+      # only soft deleted records
       def paranoid_only_condition
         val = field_not_destroyed.respond_to?(:call) ? field_not_destroyed.call : field_not_destroyed
         column_sql = arel_table[destroyed_field].to_sql
@@ -21,16 +25,20 @@ module Paranoid
         end
       end
 
+      # Temporarily disables paranoid on the model
       def disable_paranoid
         if block_given?
           @paranoid = false
           yield
+        else
+          raise 'Only block form is supported'
         end
       ensure
         @paranoid = true
       end
     end
 
+    # Restores the record
     def restore
       set_destroyed(field_not_destroyed.respond_to?(:call) ? field_not_destroyed.call : field_not_destroyed)
       @destroyed = false
@@ -54,6 +62,8 @@ module Paranoid
 
     protected
 
+    # Overrides ActiveRecord::Base#create_or_update
+    # to disable paranoid during the create and update operations
     def create_or_update_with_paranoid
       self.class.disable_paranoid { create_or_update_without_paranoid }
     end
