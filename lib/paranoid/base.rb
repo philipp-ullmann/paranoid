@@ -13,7 +13,7 @@ module Paranoid
 
       class_eval do
         class << self
-          delegate :with_destroyed, :to => :scoped
+          delegate :with_destroyed, :with_destroyed_only, :to => :scoped
         end
       end
     end
@@ -29,7 +29,12 @@ module Paranoid
       end
 
       def paranoid_only_condition
-        ["#{table_name}.#{destroyed_field} IS NOT ?", field_not_destroyed]
+        val = field_not_destroyed.respond_to?(:call) ? field_not_destroyed.call : field_not_destroyed
+        column_sql = arel_table[destroyed_field].to_sql
+        case val
+        when nil then "#{column_sql} IS NOT NULL"
+        else          ["#{column_sql} != ?", val]
+        end
       end
 
       def disable_paranoid

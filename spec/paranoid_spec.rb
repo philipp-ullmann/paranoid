@@ -26,7 +26,7 @@ describe Paranoid do
   describe 'basic functionality' do
     before(:each) do
       Place.delete_all
-      @tatooine = Place.create(:name => "Tatooine")
+      @tatooine, @mos_eisley = Place.create([{:name => "Tatooine"}, {:name => 'Mos Eisley'}])
     end
 
     it 'should recognize a class as paranoid' do
@@ -70,23 +70,34 @@ describe Paranoid do
       @tatooine.destroy
       @tatooine.deleted_at.should_not be_nil
     end
+
+    it 'should show deleted_only' do
+      @tatooine.destroy
+      destroyed = Place.with_destroyed_only.all
+      destroyed.size.should == 1
+      destroyed[0].should == @tatooine
+    end
   end
 
   describe 'for alternate field information' do
     before(:each) do
       Ninja.delete_all
-      @ninja = Ninja.create(:name => 'Steve')
+      @steve, @bob = Ninja.create([{:name => 'Steve', :visible => true}, {:name => 'Bob', :visible => true}])
+    end
+
+    it 'should have 2 visible ninjas' do
+      Ninja.all.size.should == 2
     end
 
     it 'should vanish the ninja' do
-      @ninja.destroy
+      @steve.destroy
 
       record = Ninja.first(:conditions => {:name => 'Steve'})
       record.should be_nil
     end
 
     it 'should not delete the ninja' do
-      @ninja.destroy
+      @steve.destroy
 
       record = Ninja.with_destroyed.first(:conditions => {:name => 'Steve'})
       record.should_not be_nil
@@ -94,13 +105,20 @@ describe Paranoid do
     end
 
     it 'should mark the ninja vanished' do
-      @ninja.destroy
-      @ninja.destroyed?.should be_true
+      @steve.destroy
+      @steve.destroyed?.should be_true
     end
 
     it 'should set visible to false' do
-      @ninja.destroy
-      @ninja.visible.should be_false
+      @steve.destroy
+      @steve.visible.should be_false
+    end
+
+    it 'should show deleted_only' do
+      @steve.destroy
+      destroyed = Ninja.with_destroyed_only.all
+      destroyed.size.should == 1
+      destroyed[0].should == @steve
     end
   end
 end
