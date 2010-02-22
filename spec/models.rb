@@ -30,7 +30,7 @@ class Dent < ActiveRecord::Base #:nodoc:
 end
 
 class Ding < ActiveRecord::Base #:nodoc:
-  paranoid :field => [:not_deleted, true, false]
+  paranoid :field => :not_deleted, :destroyed_value => true, :not_destroyed_value => false
   belongs_to :dent
 end
 
@@ -96,12 +96,12 @@ class Ninja < ActiveRecord::Base #:nodoc:
 end
 
 class Pirate < ActiveRecord::Base #:nodoc:
-  paranoid :field => [:alive, false, true]
+  paranoid :field => :alive, :destroyed_value => false, :not_destroyed_value => true
 end
 
 class DeadPirate < ActiveRecord::Base #:nodoc:
   set_table_name :pirates
-  paranoid :field => [:alive, true, false]
+  paranoid :field => :alive, :destroyed_value => true, :not_destroyed_value => false
 end
 
 class RandomPirate < ActiveRecord::Base #:nodoc:
@@ -115,7 +115,7 @@ end
 
 class UndestroyablePirate < ActiveRecord::Base #:nodoc:
   set_table_name :pirates
-  paranoid :field => [:alive, false, true]
+  paranoid :field => :alive, :destroyed_value => false, :not_destroyed_value => true
 
   before_destroy :ret_false
   def ret_false

@@ -90,6 +90,58 @@ describe Paranoid do
 
   describe 'for alternate field information' do
     before(:each) do
+      Pirate.delete_all
+      @roberts, @jack, @hook = Pirate.create([{:name => 'Roberts'}, {:name => 'Jack'}, {:name => 'Hook'}])
+    end
+
+    it 'should have 3 alive pirates' do
+      Pirate.all.size.should == 3
+    end
+
+    it 'should kill the pirate' do
+      @roberts.destroy
+
+      record = Pirate.first(:conditions => {:name => 'Roberts'})
+      record.should be_nil
+    end
+
+    it 'should not remove the pirate record' do
+      @roberts.destroy
+
+      record = Pirate.with_destroyed.first(:conditions => {:name => 'Roberts'})
+      record.should_not be_nil
+      record.alive.should be_false
+    end
+
+    it 'should mark the pirate dead' do
+      @roberts.destroy
+      @roberts.destroyed?.should be_true
+    end
+
+    it 'should set alive to false' do
+      @roberts.destroy
+      @roberts.alive.should be_false
+    end
+
+    it 'should show deleted_only' do
+      @roberts.destroy
+      destroyed = Pirate.with_destroyed_only.all
+      destroyed.size.should == 1
+      destroyed[0].should == @roberts
+    end
+
+    it 'should properly count records' do
+      Pirate.count.should == 3
+
+      @roberts.destroy
+      Pirate.count.should == 2
+      Pirate.with_destroyed.count.should == 3
+      Pirate.with_destroyed_only.count.should == 1
+    end
+  end
+
+  describe 'for alternate field information with is_paranoid format field information' do
+    before(:each) do
       Ninja.delete_all
       @steve, @bob, @tim = Ninja.create([{:name => 'Steve', :visible => true}, {:name => 'Bob', :visible => true}, {:name => 'Tim', :visible => true}])
     end
