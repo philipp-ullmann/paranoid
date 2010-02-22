@@ -244,4 +244,25 @@ describe Paranoid do
       @nil.should be_nil
     end
   end
+
+  describe 'callbacks' do
+    before(:each) do
+      Pirate.delete_all
+    end
+
+    it 'should not destroy the record when before_destroy returns false' do
+      pirate = UndestroyablePirate.create!(:name => 'Roberts')
+      lambda { pirate.destroy }.should_not change(UndestroyablePirate, :count)
+    end
+
+    it 'should run after_destroy callbacks' do
+      pirate = RandomPirate.create!(:name => 'Roberts')
+      lambda { pirate.destroy }.should raise_error(/after_destroy works/)
+    end
+
+    it 'should rollback on after_destroy error' do
+      pirate = RandomPirate.create!(:name => 'Roberts')
+      lambda { pirate.destroy rescue nil }.should_not change(RandomPirate, :count)
+    end
+  end
 end
