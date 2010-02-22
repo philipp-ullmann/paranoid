@@ -139,4 +139,57 @@ describe Paranoid do
       Ninja.with_destroyed_only.count.should == 1
     end
   end
+
+  describe 'has_many association' do
+    before(:each) do
+      Android.delete_all
+      Dent.delete_all
+
+      @r2d2 = Android.create(:name => 'R2D2')
+      @dents = Dent.create([
+        {:android => @r2d2, :description => 'Hit by debris'},
+        {:android => @r2d2, :description => 'Dropped while loading into X-Wing'},
+        {:android => @r2d2, :description => 'Blaster hit'}
+      ])
+
+      @dents[2].destroy
+    end
+
+    it 'should hide the soft deleted dent' do
+      @r2d2.dents.to_a.should == @dents[0,2]
+    end
+
+    it 'should show all dents with_destroyed' do
+      @r2d2.dents.with_destroyed.to_a.should == @dents
+    end
+
+    it 'should show only soft deleted with destroyed_only' do
+      @r2d2.dents.with_destroyed_only.to_a.should == [@dents[2]]
+    end
+
+    it 'should show the correct counts' do
+      @r2d2.dents.size.should == 2
+      @r2d2.dents.with_destroyed.size.should == 3
+      @r2d2.dents.with_destroyed_only.size.should == 1
+    end
+
+    it 'should load correctly through an eager load' do
+      @r2d2 = Android.eager_load(:dents).first
+      @r2d2.dents.loaded?.should be_true
+      @r2d2.dents.size.should == 2
+      @r2d2.dents.to_a.should == @dents[0,2]
+    end
+
+    it 'should load correctly through an include' do
+      @r2d2 = Android.includes(:dents).first
+      @r2d2.dents.loaded?.should be_true
+      @r2d2.dents.size.should == 2
+      @r2d2.dents.to_a.should == @dents[0,2]
+    end
+
+    it 'should work correctly for a include dependency' do
+      @nil = Android.includes(:dents).where('dents.description' => 'Blaster hit').first
+      @nil.should be_nil
+    end
+  end
 end
