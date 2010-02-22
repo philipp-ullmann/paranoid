@@ -35,17 +35,17 @@ describe Paranoid do
     end
 
     it 'should hide destroyed records' do
-      @tatooine.update_attribute('deleted_at', Time.now)
+      @tatooine.destroy
       Place.first(:conditions => {:name => 'Tatooine'}).should be_nil
     end
 
     it 'should reveal destroyed records when with_destroyed' do
-      @tatooine.update_attribute('deleted_at', Time.now)
+      @tatooine.destroy
       Place.with_destroyed.first(:conditions => {:name => 'Tatooine'}).should_not be_nil
     end
 
     it 'should restore the destroyed record' do
-      @tatooine.update_attribute('deleted_at', Time.now)
+      @tatooine.destroy
 
       @tatooine = Place.with_destroyed.first(:conditions => {:name => 'Tatooine'})
       @tatooine.restore

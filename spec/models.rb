@@ -83,6 +83,13 @@ end
 class Place < ActiveRecord::Base #:nodoc:
   paranoid
   has_and_belongs_to_many :androids
+
+  # this code is to ensure that our destroy and restore methods
+  # work without triggering before/after_update callbacks
+  before_update :raise_hell
+  def raise_hell
+    raise "hell"
+  end
 end
 
 class AndroidsPlaces < ActiveRecord::Base #:nodoc:
@@ -91,12 +98,26 @@ end
 class Ninja < ActiveRecord::Base #:nodoc:
   validates_uniqueness_of :name, :scope => :visible
   paranoid :field => [:visible, false, true]
-  
+
   alias_method :vanish, :destroy
+
+  # this code is to ensure that our destroy and restore methods
+  # work without triggering before/after_update callbacks
+  before_update :raise_hell
+  def raise_hell
+    raise "hell"
+  end
 end
 
 class Pirate < ActiveRecord::Base #:nodoc:
   paranoid :field => :alive, :destroyed_value => false, :not_destroyed_value => true
+
+  # this code is to ensure that our destroy and restore methods
+  # work without triggering before/after_update callbacks
+  before_update :raise_hell
+  def raise_hell
+    raise "hell"
+  end
 end
 
 class DeadPirate < ActiveRecord::Base #:nodoc:
