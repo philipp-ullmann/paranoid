@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{paranoid}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Genord II"]
-  s.date = %q{2010-02-19}
+  s.date = %q{2010-02-22}
   s.description = %q{}
   s.email = %q{github@xspond.com}
   s.extra_rdoc_files = [
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "init.rb",
      "lib/paranoid.rb",
      "lib/paranoid/base.rb",
+     "lib/paranoid/join_association.rb",
      "lib/paranoid/paranoid_methods.rb",
      "lib/paranoid/relation.rb",
      "paranoid.gemspec",
