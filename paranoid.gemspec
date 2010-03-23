@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{paranoid}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Genord II"]
-  s.date = %q{2010-02-22}
+  s.date = %q{2010-03-23}
   s.description = %q{}
   s.email = %q{github@xspond.com}
   s.extra_rdoc_files = [
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/xspond/paranoid/}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Enable soft delete of ActiveRecord records. Based off defunct ActsAsParanoid and IsParanoid}
   s.test_files = [
     "spec/models.rb",
