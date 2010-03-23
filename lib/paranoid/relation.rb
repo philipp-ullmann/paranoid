@@ -51,7 +51,7 @@ module Paranoid
 
     # Returns a new relation scoped to include soft deleted records
     def with_destroyed
-      spawn.tap {|relation| relation.skip_paranoid_condition }
+      clone.tap {|relation| relation.skip_paranoid_condition }
     end
 
     # Returns a new relation scoped to include only deleted records
