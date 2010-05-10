@@ -41,8 +41,14 @@ module Paranoid
     # Restores the record
     def restore
       set_destroyed(field_not_destroyed.respond_to?(:call) ? field_not_destroyed.call : field_not_destroyed)
+      
+      self.class.reflect_on_all_associations.each do |association|
+        if association.options[:dependent] == :destroy && association.klass.paranoid?
+          restore_related(association.klass, association.primary_key_name, association.options[:primary_key] || 'id', association.options) if association.macro.to_s =~ /^has/
+        end
+      end
+      
       @destroyed = false
-
       self
     end
 
@@ -74,6 +80,13 @@ module Paranoid
       updates = self.class.send(:sanitize_sql_for_assignment, {destroyed_field => val})
       self.class.unscoped.with_destroyed.where(self.class.arel_table[self.class.primary_key].eq(id)).arel.update(updates)
       @destroyed = true
+    end
+    
+    # Restores related records
+    def restore_related(klass, key_name, id_name, options)
+      klass.unscoped.with_destroyed_only.where(klass.arel_table[key_name].eq(send(id_name))).each do |model|
+        model.restore
+      end
     end
   end
 end

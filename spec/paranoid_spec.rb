@@ -265,4 +265,30 @@ describe Paranoid do
       lambda { pirate.destroy rescue nil }.should_not change(RandomPirate, :count)
     end
   end
+  
+  describe 'association destroy' do
+    before(:each) do
+      Android.delete_all
+      Component.delete_all
+      @r2d2 = Android.create(:name => 'R2D2')
+      @components = Component.create([{ :android => @r2d2, :name => 'Rotors' }, { :android => @r2d2, :name => 'Wheels' }])
+    end
+    
+    it 'should delete associated models' do
+      Android.count.should == 1
+      @r2d2.components.count.should == 2
+      @r2d2.destroy
+      Android.count.should == 0
+      @r2d2.components.count.should == 0
+    end
+    
+    it 'should restore associated models' do
+      @r2d2.destroy
+      Android.count.should == 0
+      @r2d2.components.count.should == 0
+      Android.with_destroyed_only.first.restore
+      Android.count.should == 1
+      @r2d2.components.count.should == 2
+    end
+  end
 end
