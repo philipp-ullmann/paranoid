@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{paranoid}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Genord II"]
-  s.date = %q{2010-07-28}
+  s.date = %q{2010-09-10}
   s.description = %q{}
   s.email = %q{github@xspond.com}
   s.extra_rdoc_files = [
@@ -52,12 +52,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activerecord>, ["~> 3.0.0.beta"])
+      s.add_runtime_dependency(%q<activerecord>, ["> 3.0.0"])
     else
-      s.add_dependency(%q<activerecord>, ["~> 3.0.0.beta"])
+      s.add_dependency(%q<activerecord>, ["> 3.0.0"])
     end
   else
-    s.add_dependency(%q<activerecord>, ["~> 3.0.0.beta"])
+    s.add_dependency(%q<activerecord>, ["> 3.0.0"])
   end
 end
 
