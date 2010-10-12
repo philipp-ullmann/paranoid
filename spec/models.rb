@@ -22,6 +22,9 @@ class Android < ActiveRecord::Base #:nodoc:
   end
 end
 
+class Biped < Android
+end
+
 class Dent < ActiveRecord::Base #:nodoc:
   paranoid
   belongs_to :android

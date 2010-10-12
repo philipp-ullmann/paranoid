@@ -56,7 +56,7 @@ module Paranoid
 
     # Returns true if the model is paranoid and paranoid is enabled
     def paranoid?
-      @paranoid = false unless defined?(@paranoid)
+      @paranoid = (self != ActiveRecord::Base && self.superclass.paranoid?) unless defined?(@paranoid)
       @paranoid
     end
   end

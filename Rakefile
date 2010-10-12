@@ -16,7 +16,7 @@ begin
     s.homepage = %q{http://github.com/xspond/paranoid/}
     s.description = ""
     s.authors = ["David Genord II"]
-    s.add_dependency('activerecord', '~> 3.0.0.beta')
+    s.add_dependency('activerecord', '>= 3.0.0.beta')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

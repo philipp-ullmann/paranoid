@@ -34,6 +34,10 @@ describe Paranoid do
       Place.paranoid?.should be_true
     end
 
+    it 'should recognize an STI class as paranoid' do
+      Biped.paranoid?.should be_true
+    end
+
     it 'should hide destroyed records' do
       @tatooine.destroy
       Place.first(:conditions => {:name => 'Tatooine'}).should be_nil
