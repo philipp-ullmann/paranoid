@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{paranoid}
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["David Genord II"]
-  s.date = %q{2010-09-10}
+  s.authors = ["Philipp Ullmann"]
+  s.date = %q{2010-10-12}
   s.description = %q{}
-  s.email = %q{github@xspond.com}
+  s.email = %q{philipp.ullmann@create.at}
   s.extra_rdoc_files = [
     "README.textile"
   ]
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
      "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/xspond/paranoid/}
+  s.homepage = %q{http://github.com/create-philipp-ullmann/paranoid/}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}

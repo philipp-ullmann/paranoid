@@ -12,10 +12,10 @@ begin
   Jeweler::Tasks.new do |s|
     s.name = %q{paranoid}
     s.summary = %q{Enable soft delete of ActiveRecord records. Based off defunct ActsAsParanoid and IsParanoid}
-    s.email = %q{github@xspond.com}
-    s.homepage = %q{http://github.com/xspond/paranoid/}
+    s.email = %q{philipp.ullmann@create.at}
+    s.homepage = %q{http://github.com/create-philipp-ullmann/paranoid/}
     s.description = ""
-    s.authors = ["David Genord II"]
+    s.authors = ["Philipp Ullmann"]
     s.add_dependency('activerecord', '>= 3.0.0.beta')
   end
   Jeweler::GemcutterTasks.new
