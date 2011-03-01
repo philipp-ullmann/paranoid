@@ -77,7 +77,7 @@ module Paranoid
     # Set the value for the destroyed field.
     def set_destroyed(val)
       self[destroyed_field] = val
-      updates = self.class.send(:sanitize_sql_for_assignment, {destroyed_field => val})
+      updates = Arel::Nodes::SqlLiteral.new(self.class.send(:sanitize_sql_for_assignment, {destroyed_field => val}))
       self.class.unscoped.with_destroyed.where(self.class.arel_table[self.class.primary_key].eq(id)).arel.update(updates)
       @destroyed = true
     end
