@@ -18,7 +18,7 @@ module Paranoid
       # only soft deleted records
       def paranoid_only_condition
         val = field_not_destroyed.respond_to?(:call) ? field_not_destroyed.call : field_not_destroyed
-        column_sql = arel_table[destroyed_field].to_sql
+        column_sql = self.sanitize_sql_for_assignment(destroyed_field)
         case val
         when nil then "#{column_sql} IS NOT NULL"
         else          ["#{column_sql} != ?", val]
