@@ -220,7 +220,7 @@ describe Paranoid do
     end
 
     it 'should show all dents with destroyed in a "where chain"' do
-      @r2d2.dents.where("description LIKE '%hit%'").with_destroyed.to_a.should == Dent.with_destroyed.where("description LIKE '%hit%'").to_a
+      @r2d2.dents.where("description LIKE '%hit%'").with_destroyed.to_a.should == [@dents[0], @dents[2]]
     end
 
     it 'should show only soft deleted with destroyed_only' do
