@@ -3,4 +3,5 @@ paranoid.db
 Gemfile.lock
 pkg
 vendor
+nbproject
 .bundle

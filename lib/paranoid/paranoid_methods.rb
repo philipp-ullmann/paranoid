@@ -44,7 +44,7 @@ module Paranoid
       
       self.class.reflect_on_all_associations.each do |association|
         if association.options[:dependent] == :destroy && association.klass.paranoid?
-          restore_related(association.klass, association.primary_key_name, association.options[:primary_key] || 'id', association.options) if association.macro.to_s =~ /^has/
+          restore_related(association.klass, association.foreign_key, association.options[:primary_key] || 'id', association.options) if association.macro.to_s =~ /^has/
         end
       end
       
