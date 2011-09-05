@@ -9,7 +9,7 @@ module Paranoid
     #   end
     #
     #   Item < ActiveRecord::Base
-    #     paranoid :field => [:available, fales, true]
+    #     paranoid :field => [:available, false, true]
     #   end
     #
     # === Options
@@ -36,7 +36,7 @@ module Paranoid
       @paranoid = true
 
       opts[:field] ||= [:deleted_at, Proc.new{Time.now.utc}, nil]
-      class_inheritable_accessor :destroyed_field, :field_destroyed, :field_not_destroyed
+      class_attribute :destroyed_field, :field_destroyed, :field_not_destroyed
       if opts[:field].is_a?(Array)
         self.destroyed_field, self.field_destroyed, self.field_not_destroyed = opts[:field]
       else

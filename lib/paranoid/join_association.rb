@@ -3,22 +3,21 @@ module Paranoid
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :association_join, :paranoid
+      alias_method_chain :initialize, :paranoid
     end
 
-    # Overrides ActiveRecord::Associations::ClassMethods::JoinDependency::JoinAssociation#association_join
-    # adding paranoid conditions when necessary
-    def association_join_with_paranoid
-      return @join if @join
-      result = association_join_without_paranoid
-      if reflection.klass.paranoid?
-        aliased_table = Arel::Table.new(table_name, :as => @aliased_table_name, :engine => arel_engine)
-        pb = ActiveRecord::PredicateBuilder.new(arel_engine)
-        result.concat(pb.build_from_hash(reflection.klass.paranoid_condition, aliased_table))
+    # Add conditions for eager loading
+    def initialize_with_paranoid(reflection, join_dependency, parent = nil)
+      result = initialize_without_paranoid(reflection, join_dependency, parent)
+      chain.reverse.each_with_index do |reflection, i|
+        if reflection.klass.paranoid?
+          conditions[i] << reflection.klass.paranoid_condition
+        end
       end
       result
     end
+
   end
 end
 
-ActiveRecord::Associations::ClassMethods::JoinDependency::JoinAssociation.class_eval { include Paranoid::JoinAssociation }
+ActiveRecord::Associations::JoinDependency::JoinAssociation.class_eval { include Paranoid::JoinAssociation }
